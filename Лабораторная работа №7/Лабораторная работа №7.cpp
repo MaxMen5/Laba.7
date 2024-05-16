@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 using namespace std;
 void menu() {
 	cout << "\n1 - префиксный порядок\n";
@@ -18,8 +18,6 @@ void instruction() {
 	cout << "0 - завершение работы программы\n\n";
 }
 
-enum Order { Prefix, Infix, Postfix };
-
 struct Node {
 	int param = 0;
 	Node* left = nullptr;
@@ -30,6 +28,7 @@ struct Node {
 struct Tree {
 	int counting = 0;
 	Node* root = nullptr;
+	enum Order { Prefix, Infix, Postfix };
 
 	void balance(Node* node = nullptr) {
 		if (node == nullptr) { node = root; }
@@ -275,9 +274,9 @@ int main() {
 		case 6:
 			menu();
 			cin >> par;
-			if (par == 1) { arr = tree.ToArray(Prefix); }
-			if (par == 2) { arr = tree.ToArray(Infix); }
-			if (par == 3) { arr = tree.ToArray(Postfix); }
+			if (par == 1) { arr = tree.ToArray(tree.Prefix); }
+			if (par == 2) { arr = tree.ToArray(tree.Infix); }
+			if (par == 3) { arr = tree.ToArray(tree.Postfix); }
 			cout << "\n";
 			for (int i = 0; i < tree.counting; i++) { cout << arr[i] << " "; }
 			cout << "\n";
