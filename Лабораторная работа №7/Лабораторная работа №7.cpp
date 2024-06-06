@@ -94,7 +94,7 @@ struct Tree {
 		if (node->right != nullptr) { isBalance(value, node->right); }
 	}
 
-	void balance() {
+	void Balance() {
 		while (true) {
 			int value = 0;
 			isBalance(value);
@@ -340,7 +340,7 @@ int main() {
 			tree.ToRight(par);
 			break;
 		case 9:
-			tree.balance();
+			tree.Balance();
 			break;
 		case 0:
 			return 0;
