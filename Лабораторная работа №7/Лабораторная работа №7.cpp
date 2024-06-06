@@ -24,35 +24,83 @@ struct Node {
 	Node* right = nullptr;
 	Node* up = nullptr;
 };
-
 struct Tree {
 	int counting = 0;
 	Node* root = nullptr;
 	enum Order { Prefix, Infix, Postfix };
 
-	void balance(Node* node = nullptr) {
-		if (node == nullptr) { node = root; }
-		if ((counting == 0) || (node->left == nullptr && node->right == nullptr)) { return; }
-		int right = 0, left = 0;
-		Deep(node->right, right);
-		Deep(node->left, left);
-		while (abs(right - left) > 1) {
-			if (left > right) { ToRight(node->param); }
-			else { ToLeft(node->param); }
-			node = node->up;
-			right = 0;
-			left = 0;
-			Deep(node->right, right);
-			Deep(node->left, left);
+	void BalanceTree() {
+		int* arr = ToArray(Postfix);
+		int deep = 0;
+		for (int i = 0; i < count(); i++) {
+			deep = 0;
+			Node* node = indicator(arr[i]);
+			Deep(node, deep);
+			if (deep > 2) {
+				int right = 0, left = 0;
+				Deep(node->right, right);
+				Deep(node->left, left);
+				while (abs(right - left) > 1) {
+					if (left > right) {
+						right = 0;
+						left = 0;
+						Deep(node->left->right, right);
+						Deep(node->left->left, left);
+						if (right > left) { ToLeft(node->left->param); }
+						ToRight(node->param);
+					}
+					else {
+						right = 0;
+						left = 0;
+						Deep(node->right->right, right);
+						Deep(node->right->left, left);
+						if (left > right) { ToRight(node->right->param); }
+						ToLeft(node->param);
+					}
+					node = node->up;
+					right = 0;
+					left = 0;
+					Deep(node->right, right);
+					Deep(node->left, left);
+				}
+			}
 		}
-		if (node->left != nullptr) { balance(node->left); }
-		if (node->right != nullptr) { balance(node->right); }
 	}
+
 	void Deep(Node* node, int& maximum, int deep = 1) {
 		if (node == nullptr) { return; }
 		if (node->right != nullptr) { Deep(node->right, maximum, deep + 1); }
 		if (node->left != nullptr) { Deep(node->left, maximum, deep + 1); }
 		maximum = max(deep, maximum);
+	}
+
+	Node* indicator(int value, Node* node = nullptr) {
+		if (node == nullptr) { node = root; }
+		while (node->param != value) {
+			if (value > node->param) { node = node->right; }
+			else { node = node->left; }
+		}
+		return node;
+	}
+
+	void isBalance(int& value, Node* node = nullptr) {
+		if (node == nullptr) { node = root; }
+		if ((counting == 0) || (node->left == nullptr && node->right == nullptr)) { return; }
+		int right = 0, left = 0;
+		Deep(node->right, right);
+		Deep(node->left, left);
+		if (abs(left - right) > 1) { value++; }
+		if (node->left != nullptr) { isBalance(value, node->left); }
+		if (node->right != nullptr) { isBalance(value, node->right); }
+	}
+
+	void balance() {
+		while (true) {
+			int value = 0;
+			isBalance(value);
+			if (value == 0) { break; }
+			BalanceTree();
+		}
 	}
 
 	int* ToArray(Order order = Infix) {
