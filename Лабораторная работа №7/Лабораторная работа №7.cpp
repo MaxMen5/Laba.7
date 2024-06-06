@@ -34,7 +34,7 @@ struct Tree {
 		int deep = 0;
 		for (int i = 0; i < count(); i++) {
 			deep = 0;
-			Node* node = indicator(arr[i]);
+			Node* node = ToNode(arr[i]);
 			Deep(node, deep);
 			if (deep > 2) {
 				int right = 0, left = 0;
@@ -72,15 +72,6 @@ struct Tree {
 		if (node->right != nullptr) { Deep(node->right, maximum, deep + 1); }
 		if (node->left != nullptr) { Deep(node->left, maximum, deep + 1); }
 		maximum = max(deep, maximum);
-	}
-
-	Node* indicator(int value, Node* node = nullptr) {
-		if (node == nullptr) { node = root; }
-		while (node->param != value) {
-			if (value > node->param) { node = node->right; }
-			else { node = node->left; }
-		}
-		return node;
 	}
 
 	void isBalance(int& value, Node* node = nullptr) {
